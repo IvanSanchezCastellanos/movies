@@ -1,8 +1,8 @@
 package com.soprasteria.ivan.movies.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -40,28 +40,30 @@ public class MovieServiceImplementation implements MovieServiceInterface {
 			throw new InvalidInputException();
 		}
 
-		Movie movie = TransformMovie.fromMovieDTOToMovie(movieDTO);
-		if (movieRepository.findMovie(movie.getTitle(), movie.getGenre(), movie.getYear()).isPresent()) {
+		if (movieRepository.findMovie(movieDTO.getTitle(), movieDTO.getGenre(), movieDTO.getYear()).isPresent()) {
 			throw new MovieAlreadyInDatabaseException();
-
 		}
 
-		List<Actor> actors = new ArrayList<Actor>();
+		Movie movie = TransformMovie.fromMovieDTOToMovie(movieDTO);
 
-		movie.getActors().forEach((Actor actor) -> {
+		movie.setActors(movie.getActors().stream().map(
+				
+			(Actor actor) -> {
+
 			Optional<Actor> findActor = actorRepository.findActor(actor.getName(), actor.getSurnames(), actor.getAge());
 
 			if (!findActor.isPresent()) {
-				Actor actor2 = new ActorBuilder().name(actor.getName(), actor.getSurnames()).age(actor.getAge())
-						.build();
-				actors.add(actor2);
+				Actor actor2 = new ActorBuilder().name(actor.getName(), actor.getSurnames())
+												 .age(actor.getAge())
+												 .build();
 				actorRepository.save(actor2);
+				return actor2;
 			} else {
-				actors.add(findActor.get());
+				return findActor.get();
 			}
-		});
+			
+		}).collect(Collectors.toList()));
 
-		movie.setActors(actors);
 		return movieRepository.save(movie);
 
 	}

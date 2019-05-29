@@ -1,6 +1,7 @@
 package service;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import com.soprasteria.ivan.movies.builder.dto.movie.MovieFullDTOBuilder;
 import com.soprasteria.ivan.movies.builder.entities.ActorBuilder;
@@ -26,5 +27,10 @@ public class DataForServiceTests {
 	public static MovieFullDTO getMovieFullDTO() {
 		return new MovieFullDTOBuilder().title("Titanic").year("2010").genre("Drama")
 				.actors(TransformActor.fromActorListToActorFullDTOList(new ArrayList<Actor>())).build();
+	}
+	
+	public static Optional<Movie> getOptionalMovie() {
+		Optional<Movie> optionalMovie = Optional.of(getMovie());
+		return optionalMovie;
 	}
 }

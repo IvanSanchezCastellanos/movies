@@ -26,11 +26,7 @@ public class Config {
 			Actor actor4 = new ActorBuilder().name("Santiago", "Sevilla").age(53).build();
 			Actor actor5 = new ActorBuilder().name("Chris", "Evans").age(36).build();
 
-			actorRepository.save(actor1);
-			actorRepository.save(actor2);
-			actorRepository.save(actor3);
-			actorRepository.save(actor4);
-			actorRepository.save(actor5);
+			
 
 			List<Actor> actors1 = new ArrayList<Actor>();
 			actors1.add(actor1);
@@ -44,6 +40,11 @@ public class Config {
 			moviesRepository.save(new MovieBuilder().title("Insidious").genre("Terror").year("2010").actors(actors1).build());
 			moviesRepository.save(new MovieBuilder().title("Caperucita Roja").genre("Drama").year("2004").actors(actors2).build());
 
+			actorRepository.save(actor1);
+			actorRepository.save(actor2);
+			actorRepository.save(actor3);
+			actorRepository.save(actor4);
+			actorRepository.save(actor5);
 		};
 	}
 }

@@ -50,4 +50,13 @@ public class TestTransformActor {
 
 	}
 
+	@Test
+	public void fromNullActorListToActorFullDTOList() {
+		assertTrue("Transfrom from null actor list to actor full DTO list not correct", TransformActor.fromActorListToActorFullDTOList(null) == null);
+	}
+	
+	@Test
+	public void fromNullActorFullDTOListToActorList() {
+		assertTrue("Transform from null actor full DTO list to actor list not correct", TransformActor.fromActorFullDTOListToActorList(null) == null);
+	}
 }

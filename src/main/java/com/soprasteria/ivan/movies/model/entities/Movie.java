@@ -2,6 +2,7 @@ package com.soprasteria.ivan.movies.model.entities;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -21,7 +22,7 @@ public class Movie {
 	private String year;
 
 	@JoinTable(name = "rel_movie_actor", joinColumns = @JoinColumn(name = "FK_MOVIE", nullable = false), inverseJoinColumns = @JoinColumn(name = "FK_ACTOR", nullable = false))
-	@ManyToMany
+	@ManyToMany(cascade = CascadeType.ALL)
 	private List<Actor> actors;
 
 	public Long getId() {

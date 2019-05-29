@@ -67,7 +67,7 @@ public class TestTransformMovie {
 		if (result.getYear().equals(movieYear) && result.getGenre().equals(movieGenre)
 				&& result.getTitle().equals(movieTitle)) {
 			equal = true;
-			
+
 		}
 		assertTrue("Transform from movie to movieDTO not correct", equal);
 
@@ -100,5 +100,15 @@ public class TestTransformMovie {
 				TransformMovie.fromMovieDTOToMovie(null) == null);
 
 	}
-
+	
+	@Test
+	public void fromNullMovieListToMovieYearTitleDTOList() {
+		assertTrue("Transform from null movie list to movie year/title is not correct",
+				TransformMovie.fromMovieListToMovieYearTitleDTOList(null) == null);
+	}
+	
+	@Test
+	public void fromNullMovieToMovieFullDTO() {
+		assertTrue("Transform from null movie to movie full DTO is not correct", TransformMovie.fromMovieToMovieFullDTO(null) == null);
+	}
 }

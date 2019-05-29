@@ -13,7 +13,7 @@ public class TransformActor {
 
 		if (actors != null) {
 
-			return actors.stream().map(TransformActor::mapActorToActorFullDTO).collect(Collectors.toList());
+			return actors.stream().map(TransformActor::transformActorToActorFullDTO).collect(Collectors.toList());
 
 		}
 
@@ -25,21 +25,21 @@ public class TransformActor {
 
 		if (actors != null) {
 
-			return actors.stream().map(TransformActor::mapActorFullDTOToActor).collect(Collectors.toList());
+			return actors.stream().map(TransformActor::transformActorFullDTOToActor).collect(Collectors.toList());
 		}
 
 		return null;
 
 	}
 
-	public static ActorFullDTO mapActorToActorFullDTO(Actor actor) {
+	public static ActorFullDTO transformActorToActorFullDTO(Actor actor) {
 		return new ActorFullDTOBuilder().name(actor.getName(), actor.getSurnames())
 				   						.age(actor.getAge())
 				   						.build();
 
 	}
 
-	public static Actor mapActorFullDTOToActor(ActorFullDTO actor) {
+	public static Actor transformActorFullDTOToActor(ActorFullDTO actor) {
 
 		return new ActorBuilder().name(actor.getName(), actor.getSurnames())
 								 .age(actor.getAge())

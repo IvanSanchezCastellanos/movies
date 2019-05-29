@@ -1,9 +1,13 @@
 package com.soprasteria.ivan.movies.model.entities;
 
+import java.util.List;
+
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 
 @Entity
 public class Actor {
@@ -14,6 +18,9 @@ public class Actor {
 	private String name;
 	private String surnames;
 	private Integer age;
+
+	@ManyToMany(mappedBy = "actors", fetch = FetchType.LAZY)
+	private List<Movie> movies;
 
 	public Long getId() {
 		return id;

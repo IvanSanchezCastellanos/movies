@@ -15,6 +15,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import com.soprasteria.ivan.movies.builder.entities.MovieBuilder;
 import com.soprasteria.ivan.movies.exceptions.InvalidInputException;
+import com.soprasteria.ivan.movies.exceptions.MovieAlreadyInDatabaseException;
 import com.soprasteria.ivan.movies.exceptions.MovieNotFoundException;
 import com.soprasteria.ivan.movies.model.entities.Actor;
 import com.soprasteria.ivan.movies.model.entities.Movie;
@@ -38,15 +39,13 @@ public class TestMovieService {
 
 	@Test
 	public void testGetMovieExists() {
-		MovieFullDTO movieDTO = DataForServiceTests.getMovieFullDTO();	
+		MovieFullDTO movieDTO = DataForServiceTests.getMovieFullDTO();
 		when(movieRepository.findById(1L)).thenReturn(Optional.of(DataForServiceTests.getMovie()));
 
 		MovieFullDTO result = service.getMovie(1L);
 
-		assertTrue("GetMovie method does not return the correct movie",
-					movieDTO.getGenre().equals(result.getGenre())
-				 && movieDTO.getTitle().equals(result.getTitle())
-				 && movieDTO.getYear().equals(result.getYear()));
+		assertTrue("GetMovie method does not return the correct movie", movieDTO.getGenre().equals(result.getGenre())
+				&& movieDTO.getTitle().equals(result.getTitle()) && movieDTO.getYear().equals(result.getYear()));
 	}
 
 	@Test(expected = MovieNotFoundException.class)
@@ -59,22 +58,22 @@ public class TestMovieService {
 	@Test
 	public void testSaveMovie() {
 		Movie movie = DataForServiceTests.getMovie();
-		when(movieRepository.save(movie)).thenReturn( DataForServiceTests.getMovie());
+		when(movieRepository.save(movie)).thenReturn(DataForServiceTests.getMovie());
 
 		Movie result = service.saveMovie(DataForServiceTests.getMovieFullDTO());
 
 		assertTrue("saveMovie method does not store a movie", movie.equals(result));
 	}
 
-	@Test
+	@Test(expected = MovieAlreadyInDatabaseException.class)
 	public void testSaveMovieTwoTimes() {
-//		when(movieRepository.save(movie)).thenReturn(movie);
-//		Movie result1 = service.saveMovie(movieDTO);
-//
-//		when(movieRepository.save(movie)).thenReturn(null);
-//		Movie result2 = service.saveMovie(movieDTO);
+		MovieFullDTO movieDTO = DataForServiceTests.getMovieFullDTO();
 
-		assertTrue("There is a problem saving the same movie two times", true);
+		when(movieRepository.findMovie(movieDTO.getTitle(), movieDTO.getGenre(), movieDTO.getYear()))
+				.thenReturn(DataForServiceTests.getOptionalMovie());
+
+		service.saveMovie(movieDTO);
+
 	}
 
 	@Test(expected = InvalidInputException.class)
@@ -87,14 +86,17 @@ public class TestMovieService {
 	public void testSaveRepeatedMovie() {
 		when(movieRepository.save(DataForServiceTests.getMovie())).thenReturn(null);
 
-		assertTrue("saveMovie method stores a repeated movie", service.saveMovie(DataForServiceTests.getMovieFullDTO()) == null);
+		assertTrue("saveMovie method stores a repeated movie",
+				service.saveMovie(DataForServiceTests.getMovieFullDTO()) == null);
 	}
 
 	@Test
 	public void testFindTitleYear() {
 		List<Movie> moviesList = new ArrayList<Movie>();
-		moviesList.add(new MovieBuilder().title("Titanic").genre("Drama").year("2010").actors(new ArrayList<Actor>()).build());
-		moviesList.add(new MovieBuilder().title("Rocky").genre("Action").year("2010").actors(new ArrayList<Actor>()).build());
+		moviesList.add(
+				new MovieBuilder().title("Titanic").genre("Drama").year("2010").actors(new ArrayList<Actor>()).build());
+		moviesList.add(
+				new MovieBuilder().title("Rocky").genre("Action").year("2010").actors(new ArrayList<Actor>()).build());
 		when(movieRepository.findAll()).thenReturn(moviesList);
 
 		List<MovieYearTitleDTO> result = service.findTitleYear();
